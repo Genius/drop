@@ -127,6 +127,7 @@ function createContext() {
       blurDelay: null,
       hoverOpenDelay: null,
       hoverCloseDelay: null,
+      loadContentOnDemand: false,
       tetherOptions: {}
     }
   };
@@ -244,7 +245,12 @@ function createContext() {
             }
           };
 
-          this.on('beforeOpen', generateAndSetContent.bind(this));
+          if (this.options.loadContentOnDemand) {
+            this.on('beforeOpen', generateAndSetContent.bind(this));
+          } else {
+            generateAndSetContent();
+            this.on('open', generateAndSetContent.bind(this));
+          }
         } else if (typeof this.options.content === 'object') {
           this.content.appendChild(this.options.content);
         } else {
